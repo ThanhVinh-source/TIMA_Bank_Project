@@ -1,6 +1,6 @@
 ﻿CardNumber,FullName,Gender,Birthday,Age,AgeGroup,JobName,Salary,Hình thức cư trú,TS_CREDIT_SCORE_V2,LowCreditScore,CreditScoreGroup,IncomeBracket,HasBadDebt
-12603108,Phạm Sơn Tùng,0.0,1987-12-16,,,Khác,7700000.0,Thuộc sở hữu của họ hàng,403,1,Low (High Risk),5-10m,0
-1075003746,Đào Công Quyết,0.0,,,,Nhân viên chính thức,26000000.0,Đồng sở hữu,531,1,Low (High Risk),>=25m,0
+12603108,Phạm Sơn Tùng,0.0,1987-12-16,,Unknown,Khác,7700000.0,Thuộc sở hữu của họ hàng,403,1,Low (High Risk),5-10m,0
+1075003746,Đào Công Quyết,0.0,,,Unknown,Nhân viên chính thức,26000000.0,Đồng sở hữu,531,1,Low (High Risk),>=25m,0
 1089003832,12345,0.0,1989-10-04,27.0,26-35,Nhân viên chính thức,8000000.0,Sở hữu cá nhân,588,1,Low (High Risk),5-10m,0
 1182005991,Đào Ngọc Linh,1.0,1982-01-31,34.0,26-35,Khác,12000000.0,Đồng sở hữu,675,0,Medium,10-15m,0
 1188000582,Đỗ Minh Trang,1.0,1988-01-01,28.0,26-35,Nhân viên chính thức,8000000.0,Thuộc sở hữu của họ hàng,582,1,Low (High Risk),5-10m,0
@@ -409,7 +409,7 @@
 1072005926,Nguyễn Trung Kim,0.0,1972-08-14,45.0,36-45,Tự doanh tại nhà,15000000.0,Đồng sở hữu,493,1,Low (High Risk),10-15m,0
 1092002671,Cung Đức Tuân,0.0,1992-07-23,25.0,18-25,Nhân viên tổ chức nhà nước,5000000.0,Sở hữu cá nhân,626,0,Medium,<5m,0
 12050411,Lê Anh Tuấn,0.0,1980-03-04,38.0,36-45,Nhân viên chính thức,9000000.0,Thuộc sở hữu của họ hàng,610,0,Medium,5-10m,0
-11085000003,Vũ Minh Trung,0.0,2017-05-18,0.0,,Khác,8000000.0,Khác,683,0,Medium,5-10m,0
+11085000003,Vũ Minh Trung,0.0,2017-05-18,0.0,Unknown,Khác,8000000.0,Khác,683,0,Medium,5-10m,0
 13552594,Phí Viết Nghĩa,0.0,1991-09-18,26.0,26-35,Các hình thức tự kinh doanh khác,50000000.0,Sở hữu cá nhân,513,1,Low (High Risk),>=25m,1
 101182083,Nguyễn Thị Thu Hiền,1.0,1992-07-19,25.0,18-25,Nhân viên chính thức,4200000.0,Thuộc sở hữu của họ hàng,438,1,Low (High Risk),<5m,0
 111751635,Bùi Vương Anh,0.0,1982-04-01,35.0,26-35,Khác,8000000.0,Khác,596,1,Low (High Risk),5-10m,0
@@ -1783,7 +1783,7 @@
 321571082,Dương Văn Duy,0.0,1995-09-01,23.0,18-25,Bảo vệ,8000000.0,Sở hữu cá nhân,578,1,Low (High Risk),5-10m,0
 1091015315,Nguyễn Viết Tùng,0.0,1991-02-20,27.0,26-35,Kế toán,3500000.0,Thuê,606,0,Medium,<5m,0
 233130153,Lê Thanh Tuyên,0.0,1992-03-22,26.0,26-35,Công nhân,7000000.0,Thuê,608,0,Medium,5-10m,0
-90859268,Nguyễn Yến Quỳnh,,,,,Khác,8000000.0,Khác,721,0,Good,5-10m,0
+90859268,Nguyễn Yến Quỳnh,Unknown,,,Unknown,Khác,8000000.0,Khác,721,0,Good,5-10m,0
 15091000013,Nguyễn Mạnh Cương,0.0,1991-08-31,27.0,26-35,Shipper(Giao hàng),10000000.0,Thuê,606,0,Medium,5-10m,0
 1181002848,Lê Thị Lan Hương,1.0,1981-06-02,37.0,36-45,Khác,12000000.0,Sở hữu cá nhân,709,0,Good,10-15m,0
 50395742,Đinh Thị Hằng,1.0,1981-11-08,37.0,36-45,Tư vấn,8000000.0,Thuê,611,0,Medium,5-10m,0
@@ -1802,8 +1802,8 @@
 12672793,Đinh Đức Anh,0.0,1990-12-03,28.0,26-35,Giám Sát,30000000.0,Sở hữu cá nhân,561,1,Low (High Risk),>=25m,0
 132110900,Nguyễn Anh Quang,0.0,1993-11-20,25.0,18-25,Chăm sóc KH,4700000.0,Thuê,548,1,Low (High Risk),<5m,0
 1088007042,Đào Ngọc Hoà,0.0,1988-09-12,30.0,26-35,Bảo vệ,10000000.0,Sở hữu cá nhân,582,1,Low (High Risk),5-10m,0
-272421895,Lê Mạnh Hoàng,,,,,Khác,8000000.0,Khác,625,0,Medium,5-10m,0
-1094016847,Nguyễn Thanh Truyền,,,,,Khác,8000000.0,Khác,612,0,Medium,5-10m,0
+272421895,Lê Mạnh Hoàng,Unknown,,,Unknown,Khác,8000000.0,Khác,625,0,Medium,5-10m,0
+1094016847,Nguyễn Thanh Truyền,Unknown,,,Unknown,Khác,8000000.0,Khác,612,0,Medium,5-10m,0
 194409016,Đinh Thị Trúc Oanh,1.0,1991-06-16,27.0,26-35,Công nhân,6000000.0,Thuê,686,0,Medium,5-10m,0
 1097017888,Nguyễn Nhật Nam,0.0,1997-05-22,21.0,18-25,Khác,7000000.0,Nhà sở hữu,476,1,Low (High Risk),5-10m,0
 38093011979,Cầm Tuấn Vũ,0.0,1993-05-01,25.0,18-25,Lái xe,9000000.0,Thuê,608,0,Medium,5-10m,0
@@ -1863,7 +1863,7 @@
 122080132,Lý Thị Nghiêm,1.0,1992-02-05,26.0,26-35,Kế toán,8000000.0,Thuê,618,0,Medium,5-10m,0
 70870234,Trần Bình Trọng,0.0,1991-01-20,27.0,26-35,Khác,6800000.0,Thuê,549,1,Low (High Risk),5-10m,0
 331764079,Nguyễn Hoài Duy,0.0,1996-12-09,22.0,18-25,Công nhân,7500000.0,Thuê,577,1,Low (High Risk),5-10m,0
-60526843,Trần Hùng Mạnh,,,,,Khác,8000000.0,Khác,638,0,Medium,5-10m,0
+60526843,Trần Hùng Mạnh,Unknown,,,Unknown,Khác,8000000.0,Khác,638,0,Medium,5-10m,0
 35091001441,Lưu Văn Hạng,0.0,1991-11-09,27.0,26-35,Kinh doanh,8000000.0,Nhà sở hữu,605,0,Medium,5-10m,0
 151505959,Nguyễn Văn Trọng,0.0,1985-12-02,34.0,26-35,Tự doanh không ĐKKD,12000000.0,Thuê,597,1,Low (High Risk),10-15m,0
 30094001694,Phạm Đức Hùng,0.0,1994-10-25,25.0,18-25,Shipper(Giao hàng),14000000.0,Thuê,548,1,Low (High Risk),10-15m,0
