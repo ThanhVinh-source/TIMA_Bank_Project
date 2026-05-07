@@ -4,34 +4,20 @@
 
 ### *A complete Data Analytics & Machine Learning project for consumer-loan risk analysis*
 
-<h2>🏦 💳 📈 🧹 🧠 🗂️ 🚀</h2>
+<h3>🏦 💳 📈 🧹 🧠 🗂️ 🚀</h3>
 
 <p>
-  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
-  <img src="https://img.shields.io/badge/Jupyter-Notebook-F37626?style=for-the-badge&logo=jupyter&logoColor=white" alt="Jupyter Notebook" />
-  <img src="https://img.shields.io/badge/pandas-Data%20Analysis-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="pandas" />
-  <img src="https://img.shields.io/badge/NumPy-Numerical%20Computing-013243?style=for-the-badge&logo=numpy&logoColor=white" alt="NumPy" />
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+" />
+  <img src="https://img.shields.io/badge/Jupyter-Notebook-F37626?style=flat-square&logo=jupyter&logoColor=white" alt="Jupyter Notebook" />
+  <img src="https://img.shields.io/badge/pandas-Data%20Analysis-150458?style=flat-square&logo=pandas&logoColor=white" alt="pandas" />
+  <img src="https://img.shields.io/badge/NumPy-Numerical%20Computing-013243?style=flat-square&logo=numpy&logoColor=white" alt="NumPy" />
 </p>
 
 <p>
-  <img src="https://img.shields.io/badge/scikit--learn-ML%20Models-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white" alt="scikit-learn" />
-  <img src="https://img.shields.io/badge/XGBoost-Gradient%20Boosting-FF6600?style=for-the-badge" alt="XGBoost" />
-  <img src="https://img.shields.io/badge/Matplotlib-Visualization-11557C?style=for-the-badge" alt="Matplotlib" />
-  <img src="https://img.shields.io/badge/Seaborn-Statistical%20Charts-4C72B0?style=for-the-badge" alt="Seaborn" />
-</p>
-
-<p>
-  <img src="https://img.shields.io/badge/Domain-Credit%20Risk-B71C1C?style=for-the-badge" alt="Credit Risk" />
-  <img src="https://img.shields.io/badge/Workflow-EDA%20%7C%20Cleaning%20%7C%20Modeling-2E7D32?style=for-the-badge" alt="EDA Cleaning Modeling" />
-  <img src="https://img.shields.io/badge/Data%20Model-Star%20Schema-6A1B9A?style=for-the-badge" alt="Star Schema" />
-  <img src="https://img.shields.io/badge/Output-BI%20Ready-1565C0?style=for-the-badge" alt="BI Ready" />
-</p>
-
-<p>
-  <img src="https://img.shields.io/badge/Records-2%2C383-263238?style=for-the-badge" alt="2,383 records" />
-  <img src="https://img.shields.io/badge/Cleaned%20Features-55-455A64?style=for-the-badge" alt="55 cleaned features" />
-  <img src="https://img.shields.io/badge/NPL%20Ratio-8.64%25-C62828?style=for-the-badge" alt="8.64% NPL ratio" />
-  <img src="https://img.shields.io/badge/Models-LogReg%20%7C%20RF%20%7C%20XGBoost-00695C?style=for-the-badge" alt="Logistic Regression, Random Forest, XGBoost" />
+  <img src="https://img.shields.io/badge/scikit--learn-ML%20Models-F7931E?style=flat-square&logo=scikitlearn&logoColor=white" alt="scikit-learn" />
+  <img src="https://img.shields.io/badge/XGBoost-Gradient%20Boosting-FF6600?style=flat-square" alt="XGBoost" />
+  <img src="https://img.shields.io/badge/Matplotlib-Visualization-11557C?style=flat-square" alt="Matplotlib" />
+  <img src="https://img.shields.io/badge/Seaborn-Statistical%20Charts-4C72B0?style=flat-square" alt="Seaborn" />
 </p>
 
 <br />
