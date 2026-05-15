@@ -6,6 +6,7 @@ import requests
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL
+from sqlalchemy.types import NVARCHAR, DateTime
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env", override=True)
@@ -67,7 +68,20 @@ def load_sqlserver():
         raise ValueError("Dim_Customer.CardNumber must be unique")
 
     for table, df in tables.items():
-        df.to_sql(f"stg_{table}", engine, schema=schema, if_exists="replace", index=False, chunksize=1000)
+        dtype = {
+            col: NVARCHAR(length=4000)
+            for col in df.select_dtypes(include=["object", "string"]).columns
+        }
+        
+        df.to_sql(
+            f"stg_{table}",
+            engine,
+            schema=schema,
+            if_exists="replace",
+            index=False,
+            chunksize=1000,
+            dtype=dtype,
+        )
 
     with engine.begin() as con:
         for table in tables:
