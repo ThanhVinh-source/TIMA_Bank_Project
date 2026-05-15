@@ -6,7 +6,7 @@ import requests
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL
-from sqlalchemy.types import NVARCHAR, DateTime
+from sqlalchemy.types import NVARCHAR
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env", override=True)
