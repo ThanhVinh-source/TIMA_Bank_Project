@@ -270,10 +270,10 @@ The second modeling approach uses observed repayment status:
 
 | Group | Definition |
 | --- | --- |
-| `Risk` | `Muộn` or `Nợ xấu` |
-| `Safety` | `Hoàn thành` |
+| `Risk` | `Late` or `Non-Performing` |
+| `Safety` | `Completed` |
 
-Ongoing loans (`Đang vay`) are excluded from this binary target because the final repayment outcome is not yet known.
+Ongoing loans (`Active`) are excluded from this binary target because the final repayment outcome is not yet known.
 
 Observed class distribution:
 
