@@ -480,23 +480,14 @@ During each run, the script first creates `stg_*` tables, then replaces the fina
 
 ### Required `.env` settings
 
-Create a local `.env` file in the project root. This file is intentionally ignored by Git because it can contain credentials.
+Create a local `.env` file in the project root.
 
 ```env
-SQLSERVER_CONNECTION_STRING=DRIVER={ODBC Driver 18 for SQL Server};SERVER=localhost;DATABASE=TIMA_Bank;UID=your_user;PWD=your_password;TrustServerCertificate=yes
-SQL_SCHEMA=dbo
-PAPERMILL_KERNEL=python3
-POWER_AUTOMATE_REFRESH_URL=https://prod-xx.region.logic.azure.com/...
+SQLSERVER_CONNECTION_STRING=DRIVER={ODBC Driver 18 for SQL Server};SERVER=your_server;DATABASE=name_of_database;UID=your_user;PWD=your_password;TrustServerCertificate=yes
+SQL_SCHEMA=<can be default>
+PAPERMILL_KERNEL=<canbe default>
+POWER_AUTOMATE_REFRESH_URL=
 ```
-
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `SQLSERVER_CONNECTION_STRING` | Yes | ODBC connection string used by SQLAlchemy/pyodbc to connect to SQL Server. |
-| `SQL_SCHEMA` | No | Destination schema for the final tables. Defaults to `dbo`. |
-| `PAPERMILL_KERNEL` | No | Jupyter kernel name used by Papermill. Defaults to `python3`. |
-| `POWER_AUTOMATE_REFRESH_URL` | No | Optional HTTP trigger URL for a Power Automate flow that refreshes the Power BI dataset/report. |
-
-If `POWER_AUTOMATE_REFRESH_URL` is not provided, the script still loads SQL Server successfully and prints a reminder to refresh Power BI manually.
 
 ## Power BI Dashboard
 
