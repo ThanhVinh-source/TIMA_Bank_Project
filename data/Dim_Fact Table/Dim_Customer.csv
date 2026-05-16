@@ -1,6 +1,6 @@
 ﻿CardNumber,FullName,Gender,Birthday,Age,AgeGroup,JobName,Salary,Hình thức cư trú,TS_CREDIT_SCORE_V2,LowCreditScore,CreditScoreGroup,IncomeBracket,HasBadDebt
 12603108,Phạm Sơn Tùng,0.0,1987-12-16,,Unknown,Khác,7700000.0,Thuộc sở hữu của họ hàng,403,1,Low (High Risk),5-10m,0
-1075003746,Đào Công Quyết,0.0,,,Unknown,Nhân viên chính thức,26000000.0,Đồng sở hữu,531,1,Low (High Risk),>=25m,0
+1075003746,Đào Công Quyết,0.0,2025-01-01,-9.0,Unknown,Nhân viên chính thức,26000000.0,Đồng sở hữu,531,1,Low (High Risk),>=25m,0
 1089003832,12345,0.0,1989-10-04,27.0,26-35,Nhân viên chính thức,8000000.0,Sở hữu cá nhân,588,1,Low (High Risk),5-10m,0
 1182005991,Đào Ngọc Linh,1.0,1982-01-31,34.0,26-35,Khác,12000000.0,Đồng sở hữu,675,0,Medium,10-15m,0
 1188000582,Đỗ Minh Trang,1.0,1988-01-01,28.0,26-35,Nhân viên chính thức,8000000.0,Thuộc sở hữu của họ hàng,582,1,Low (High Risk),5-10m,0
