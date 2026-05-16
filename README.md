@@ -481,9 +481,9 @@ During each run, the script first creates `stg_*` tables, then replaces the fina
 Create a local `.env` file in the project root.
 
 ```env
-SQLSERVER_CONNECTION_STRING=DRIVER={ODBC Driver 18 for SQL Server};SERVER=your_server;DATABASE=name_of_database;UID=your_user;PWD=your_password;TrustServerCertificate=yes
-SQL_SCHEMA=<can be default>
-PAPERMILL_KERNEL=<canbe default>
+SQLSERVER_CONNECTION_STRING=DRIVER={ODBC Driver 18 for SQL Server};SERVER=your_server;DATABASE=name_of_database;UID=your_user;PWD=your_password;TrustServerCertificate=yes/no
+SQL_SCHEMA= <Can set default>
+PAPERMILL_KERNEL= <Can be set default>
 POWER_AUTOMATE_REFRESH_URL=
 ```
 
