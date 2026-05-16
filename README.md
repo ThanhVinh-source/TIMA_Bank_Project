@@ -1,8 +1,8 @@
 <div align="center">
 
-# TIMA Bank Credit Risk Analytics Project 💳📊
+# TIMA Bank Credit Risk Analytics Project
 
-### *A complete Data Analytics & Machine Learning project for consumer-loan risk analysis*
+### *An end-to-end credit-risk analytics pipeline from CRM data to SQL Server and Power BI*
 
 <h3>🏦 💳 📈 🧹 🧠 🗂️ 🚀</h3>
 
@@ -20,16 +20,23 @@
   <img src="https://img.shields.io/badge/Seaborn-Statistical%20Charts-4C72B0?style=flat-square" alt="Seaborn" />
 </p>
 
+<p>
+  <img src="https://img.shields.io/badge/SQL%20Server-Data%20Warehouse-CC2927?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server" />
+  <img src="https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?style=flat-square&logo=powerbi&logoColor=black" alt="Power BI" />
+  <img src="https://img.shields.io/badge/Papermill-Automated%20Notebooks-4B8BBE?style=flat-square" alt="Papermill" />
+</p>
+
 <br />
 
-*From raw CRM lending records to cleaned analytical data, risk insights, predictive models, and BI-ready fact/dimension tables.*
+*From raw CRM lending records to cleaned analytical data, risk insights, predictive models, SQL Server tables, and an interactive Power BI dashboard.*
 
 <p>
   <b>🏦 Credit Portfolio</b> &nbsp;•&nbsp;
   <b>🧹 Data Cleaning</b> &nbsp;•&nbsp;
   <b>📊 Exploratory Analytics</b> &nbsp;•&nbsp;
   <b>🧠 Predictive Modeling</b> &nbsp;•&nbsp;
-  <b>🗂️ Star Schema</b>
+  <b>🗂️ Star Schema</b> &nbsp;•&nbsp;
+  <b>📈 Power BI</b>
 </p>
 
 </div>
@@ -38,7 +45,7 @@
 
 ## Project Overview
 
-An end-to-end data analytics and predictive modeling project for TIMA loan data. The project turns raw CRM lending records into a cleaned analytical dataset, explores customer and loan behavior, builds a dimensional data model, and compares machine learning approaches for credit risk classification.
+An end-to-end data analytics and predictive modeling project for TIMA loan data. The project turns raw CRM lending records into a cleaned analytical dataset, explores customer and loan behavior, builds a dimensional data model, compares machine learning approaches for credit risk classification, and publishes the BI-ready outputs into SQL Server for Power BI reporting.
 
 The work is designed to answer practical lending questions:
 
@@ -47,6 +54,7 @@ The work is designed to answer practical lending questions:
 - ⚠️ Which customer, product, income, geography, and credit-history signals are associated with late payment or bad debt?
 - 🤖 Can historical loan information support an early-warning credit risk model?
 - 🗂️ How can the cleaned data be reshaped into fact and dimension tables for BI reporting?
+- 🔁 How can the refresh flow be automated from notebooks to SQL Server and Power BI?
 
 ## Table of Contents
 
@@ -60,6 +68,8 @@ The work is designed to answer practical lending questions:
 - [Modeling Approach](#modeling-approach)
 - [Key Findings](#key-findings)
 - [Dimensional Model](#dimensional-model)
+- [Automated Pipeline, SQL Server, and Power BI](#automated-pipeline-sql-server-and-power-bi)
+- [Power BI Dashboard](#power-bi-dashboard)
 - [How to Run](#how-to-run)
 - [Dependencies](#dependencies)
 - [Data Privacy](#data-privacy)
@@ -77,6 +87,9 @@ The work is designed to answer practical lending questions:
 | Risk analysis | Examines how LoanStatus changes across products, cities, age groups, gender, salary brackets, occupations, residence types, credit score groups, bad debt history, and late payment history. |
 | Predictive modeling | Compares Logistic Regression, Random Forest, and XGBoost models for multi-class risk labels and binary Risk/Safety classification. |
 | BI-ready data model | Exports fact and dimension tables for reporting, dashboards, and further analytics. |
+| Automated pipeline | Uses `scripts/run_pipeline.py` to execute the notebook pipeline, rebuild output tables, and load them into SQL Server. |
+| SQL Server delivery | Writes the final `Dim_*` and `Fact_Loans` tables to the configured SQL Server schema. |
+| Power BI dashboard | Includes a Power BI report file connected to the dimensional model for portfolio, risk, product, and geography reporting. |
 
 ## Repository Structure
 
@@ -97,6 +110,10 @@ TIMA_Bank_Project/
 │   ├── data_cleaning_preprocessing.ipynb
 │   ├── data_analysis_and_predictive_modeling.ipynb
 │   └── create_dim_fact_table.ipynb
+├── scripts/
+│   └── run_pipeline.py
+├── Dashboard/
+│   └── TIMA_Data analysis dashboard.pbix
 ├── .gitignore
 ├── environment.yml
 ├── requirements.txt
@@ -114,6 +131,11 @@ flowchart LR
     E --> F["EDA and predictive modeling"]
     E --> G["Dimensional model"]
     G --> H["Fact and dimension CSV tables"]
+    H --> I["run_pipeline.py<br/>automated delivery"]
+    I --> J["SQL Server<br/>Dim_* and Fact_Loans"]
+    J --> K["Power BI dashboard"]
+    I -. optional webhook .-> L["Power Automate<br/>dataset refresh"]
+    L -. refresh .-> K
 ```
 
 ## Dataset Overview
@@ -132,6 +154,13 @@ The project works with TIMA CRM loan records. The cleaned analytical file contai
 | `data/Dim_Fact Table/Dim_Date.csv` | Date dimension generated from application dates. |
 | `data/Dim_Fact Table/Dim_Geography.csv` | Geography dimension at city and district level. |
 | `data/Dim_Fact Table/Dim_Geography2.csv` | Simplified geography dimension at city level. |
+
+### Automation and reporting files
+
+| File | Description |
+| --- | --- |
+| `scripts/run_pipeline.py` | Runs the notebook pipeline with Papermill, reloads dimensional CSV outputs into SQL Server, and optionally triggers a Power Automate refresh webhook. |
+| `Dashboard/TIMA_Data analysis dashboard.pbix` | Power BI dashboard file built on top of the project outputs. |
 
 ### Important original fields
 
@@ -180,6 +209,8 @@ Run the notebooks in this order for the clearest project flow.
 | 2 | `notebook/data_cleaning_preprocessing.ipynb` | Builds analytical features, creates loan status labels, checks final nulls, and exports the cleaned dataset. |
 | 3 | `notebook/data_analysis_and_predictive_modeling.ipynb` | Performs exploratory analysis, risk segmentation, model training, model tuning, AUC evaluation, and feature importance analysis. |
 | 4 | `notebook/create_dim_fact_table.ipynb` | Converts the cleaned flat dataset into BI-friendly fact and dimension tables. |
+
+For production-style refreshes, `scripts/run_pipeline.py` automates notebooks 1, 2, and 4, then pushes the final dimensional tables into SQL Server. The modeling notebook remains an analytical notebook and is not part of the automated SQL Server load.
 
 ## Analytical Themes
 
@@ -414,6 +445,83 @@ Geography is provided in two levels:
 - `Dim_Geography.csv`: city and district lookup for more detailed geographic analysis.
 - `Dim_Geography2.csv`: city-only lookup, which matches the `CityName` field stored in `Fact_Loans.csv`.
 
+## Automated Pipeline, SQL Server, and Power BI
+
+The project now includes `scripts/run_pipeline.py` for a repeatable refresh flow from source data to BI consumption.
+
+### What the pipeline does
+
+1. Executes the core notebook workflow with Papermill:
+   - `notebook/data_understanding.ipynb`
+   - `notebook/data_cleaning_preprocessing.ipynb`
+   - `notebook/create_dim_fact_table.ipynb`
+2. Stores executed notebook copies in `runs/` for audit/debugging.
+3. Reads the final CSV outputs from `data/Dim_Fact Table/`.
+4. Validates key table quality rules:
+   - `Fact_Loans.LoanID` must not contain null values.
+   - `Dim_Customer.CardNumber` must be unique.
+5. Loads all final tables into SQL Server through `sqlalchemy` and `pyodbc`.
+6. Optionally calls a Power Automate webhook to refresh the Power BI dataset/report after SQL Server has been updated.
+
+### SQL Server output tables
+
+The pipeline writes these tables to the schema defined by `SQL_SCHEMA`:
+
+| SQL Server table | Source CSV |
+| --- | --- |
+| `Dim_Customer` | `data/Dim_Fact Table/Dim_Customer.csv` |
+| `Dim_Product` | `data/Dim_Fact Table/Dim_Product.csv` |
+| `Dim_Date` | `data/Dim_Fact Table/Dim_Date.csv` |
+| `Dim_Geography` | `data/Dim_Fact Table/Dim_Geography.csv` |
+| `Dim_Geography2` | `data/Dim_Fact Table/Dim_Geography2.csv` |
+| `Fact_Loans` | `data/Dim_Fact Table/Fact_Loans.csv` |
+
+During each run, the script first creates `stg_*` tables, then replaces the final tables with the refreshed versions. Because this is a full-refresh load, make sure the target schema is dedicated to this project or that replacing these tables is acceptable.
+
+### Required `.env` settings
+
+Create a local `.env` file in the project root. This file is intentionally ignored by Git because it can contain credentials.
+
+```env
+SQLSERVER_CONNECTION_STRING=DRIVER={ODBC Driver 18 for SQL Server};SERVER=localhost;DATABASE=TIMA_Bank;UID=your_user;PWD=your_password;TrustServerCertificate=yes
+SQL_SCHEMA=dbo
+PAPERMILL_KERNEL=python3
+POWER_AUTOMATE_REFRESH_URL=https://prod-xx.region.logic.azure.com/...
+```
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `SQLSERVER_CONNECTION_STRING` | Yes | ODBC connection string used by SQLAlchemy/pyodbc to connect to SQL Server. |
+| `SQL_SCHEMA` | No | Destination schema for the final tables. Defaults to `dbo`. |
+| `PAPERMILL_KERNEL` | No | Jupyter kernel name used by Papermill. Defaults to `python3`. |
+| `POWER_AUTOMATE_REFRESH_URL` | No | Optional HTTP trigger URL for a Power Automate flow that refreshes the Power BI dataset/report. |
+
+If `POWER_AUTOMATE_REFRESH_URL` is not provided, the script still loads SQL Server successfully and prints a reminder to refresh Power BI manually.
+
+## Power BI Dashboard
+
+The repository includes the Power BI report file:
+
+```text
+Dashboard/TIMA_Data analysis dashboard.pbix
+```
+
+Use this file in Power BI Desktop to review the dashboard, update data-source settings, refresh visuals, and publish to Power BI Service. The expected reporting layer is the SQL Server dimensional model produced by the pipeline:
+
+- `Dim_Customer`
+- `Dim_Product`
+- `Dim_Date`
+- `Dim_Geography` or `Dim_Geography2`
+- `Fact_Loans`
+
+Recommended Power BI refresh flow:
+
+1. Run `python scripts/run_pipeline.py`.
+2. Confirm the refreshed tables are available in SQL Server.
+3. Open or publish `Dashboard/TIMA_Data analysis dashboard.pbix`.
+4. Configure the Power BI data source to the same SQL Server database/schema.
+5. Refresh manually in Power BI Desktop or use the optional Power Automate webhook for Power BI Service refresh.
+
 ## How to Run
 
 ### 1. Clone or open the project
@@ -459,7 +567,24 @@ jupyter notebook
 
 Then open the notebooks from the `notebook/` directory and run them in the recommended order.
 
-### 5. Rebuild outputs
+### 5. Run the automated SQL Server and Power BI pipeline
+
+Before running the automated pipeline, make sure:
+
+- SQL Server is reachable from your machine.
+- The Microsoft ODBC Driver for SQL Server is installed.
+- `.env` contains `SQLSERVER_CONNECTION_STRING`.
+- The target database/schema exists.
+
+Run:
+
+```bash
+python scripts/run_pipeline.py
+```
+
+This command regenerates the cleaned dataset and dimensional outputs, loads them into SQL Server, and optionally triggers Power Automate for Power BI refresh.
+
+### 6. Rebuild outputs manually
 
 To regenerate the cleaned dataset and dimensional tables:
 
@@ -485,8 +610,13 @@ The notebooks use the Python libraries listed in `requirements.txt` and `environ
 - `xgboost`
 - `jupyter`
 - `ipykernel`
+- `papermill`
+- `python-dotenv`
+- `SQLAlchemy`
+- `pyodbc`
+- `requests`
 
-The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended.
+The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The automated SQL Server load also requires a local Microsoft ODBC Driver for SQL Server that matches the driver name used in `SQLSERVER_CONNECTION_STRING`.
 
 ## Data Privacy
 
@@ -523,9 +653,10 @@ Before sharing publicly, remove or mask fields such as:
 - Add cross-validation summaries and model calibration curves.
 - Test models on a later time period to evaluate true out-of-time predictive performance.
 - Compare rule-based labels with real repayment outcomes to measure business usefulness.
-- Build a dashboard from the fact and dimension tables in Power BI, Tableau, Looker Studio, or another BI tool.
+- Add formal Power BI deployment notes, scheduled refresh settings, and gateway configuration screenshots.
+- Add incremental-load logic for SQL Server when the CRM export grows beyond full-refresh size.
 - Document feature definitions in a formal data dictionary.
 
 ## Project Summary
 
-This project moves from raw lending operations data to business-ready credit analytics. It cleans and enriches TIMA CRM records, identifies borrower and product risk patterns, builds predictive models, and exports a BI-ready dimensional structure. The result is a practical foundation for credit portfolio monitoring, customer segmentation, risk warning, and future dashboard development.
+This project moves from raw lending operations data to business-ready credit analytics. It cleans and enriches TIMA CRM records, identifies borrower and product risk patterns, builds predictive models, exports a BI-ready dimensional structure, loads it into SQL Server, and connects it to Power BI. The result is a practical foundation for credit portfolio monitoring, customer segmentation, risk warning, and dashboard-driven decision making.

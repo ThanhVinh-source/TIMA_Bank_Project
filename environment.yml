@@ -15,4 +15,9 @@ dependencies:
   - xgboost
   - jupyter
   - ipykernel
+  - papermill
+  - python-dotenv
+  - sqlalchemy
+  - pyodbc
+  - requests
   - pip
