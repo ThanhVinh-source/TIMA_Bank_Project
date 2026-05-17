@@ -70,7 +70,7 @@ The work is designed to answer practical lending questions:
 - [Power BI Dashboard](#power-bi-dashboard)
 - [How to Run](#how-to-run)
 - [Dependencies](#dependencies)
-- [Data Privacy](#data-privacy)
+- [Dataset Note](#dataset-note)
 - [Limitations](#limitations)
 - [Future Improvements](#future-improvements)
 
@@ -258,6 +258,21 @@ The notebook creates a `Risk_Level` target from `TS_CREDIT_SCORE_V2` and `HasBad
 | `Trung bình (Medium)` | Credit score from 500 to 700 and no bad debt. |
 | `Thấp (Low)` | Credit score above 700 and no bad debt. |
 
+**Feature set for Track 1**
+
+These features are selected for the rule-based `Risk_Level` experiment. Since the target is defined from credit score and bad debt logic, the model is expected to learn the rule structure very strongly.
+
+| Feature role | Selected features |
+| --- | --- |
+| Rule-driving credit variables | `TS_CREDIT_SCORE_V2`, `HasBadDebt` |
+| Additional repayment history | `HasLatePayment`, `NumberOfLoans` |
+| Financial capacity | `Salary`, `IncomeBracket`, `LoanToIncomeRatio` |
+| Loan behavior | `Loan_log`, `LoanTermMonths` |
+| Customer profile | `JobName`, `Hình thức cư trú`, `AgeGroup`, `Gender` |
+| Product and geography | `ProductCreditName`, `CityName` |
+
+`Loan_log` is created from `Tiền giải ngân` using `log1p` to reduce the impact of very large loan outliers. Categorical fields are one-hot encoded with `pd.get_dummies`, and numerical fields are scaled with `StandardScaler` before training.
+
 Models compared:
 
 - Multinomial Logistic Regression
@@ -310,6 +325,21 @@ Observed class distribution:
 | --- | ---: |
 | Safety | 1,586 |
 | Risk | 731 |
+
+**Feature set for Track 2**
+
+These features are selected for the observed repayment-behavior model. Unlike Track 1, this target comes from actual `LoanStatus` outcomes after removing ongoing loans.
+
+| Feature role | Selected features |
+| --- | --- |
+| Credit history signals | `TS_CREDIT_SCORE_V2`, `HasBadDebt`, `HasLatePayment` |
+| Borrowing history | `NumberOfLoans` |
+| Affordability signals | `Salary`, `IncomeBracket`, `LoanToIncomeRatio` |
+| Loan structure | `Loan_log`, `LoanTermMonths` |
+| Product risk signals | `ProductCreditName` |
+| Customer and location context | `JobName`, `Hình thức cư trú`, `AgeGroup`, `Gender`, `CityName` |
+
+For this track, ongoing loans are removed before modeling, then the remaining loans are stratified into train/test sets so the `Risk` and `Safety` balance is preserved. The same preprocessing pattern is applied: one-hot encoding for categorical variables and `StandardScaler` for numerical variables.
 
 Selected observed results:
 
@@ -607,21 +637,11 @@ The notebooks use the Python libraries listed in `requirements.txt` and `environ
 
 The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The automated SQL Server load also requires a local Microsoft ODBC Driver for SQL Server that matches the driver name used in `SQLSERVER_CONNECTION_STRING`.
 
-## Data Privacy
+## ⚠️ Dataset Note
 
-The dataset contains sensitive customer-level fields such as names, identity/card numbers, phone numbers, addresses, company information, salary, and credit behavior. Treat this repository as private unless the data has been anonymized.
+> ⚠️ This dataset is used only for learning, analysis, and project demonstration purposes. It is not a production dataset from a real business environment.
 
-Before sharing publicly, remove or mask fields such as:
-
-- `FullName`
-- `CardNumber`
-- `Số điện thoại khách hàng`
-- `Street`
-- `Address`
-- `NameCompany`
-- `AddressCompany`
-- `FullNameFamily`
-- Any other personally identifiable or commercially sensitive columns
+Any personal-looking information in the files, such as customer names, card numbers, phone numbers, addresses, company names, income values, and family contact fields, should be understood as sample project data. These details do not represent real individuals and should not be interpreted as actual customer information.
 
 ## Limitations
 
@@ -636,7 +656,6 @@ Before sharing publicly, remove or mask fields such as:
 ## Future Improvements
 
 - Pin package versions after final validation for stricter reproducibility.
-- Separate personally identifiable information from analytical features.
 - Add automated data validation checks for date logic, negative values, impossible ages, and outlier thresholds.
 - Build a reusable preprocessing pipeline with `sklearn.pipeline`.
 - Add cross-validation summaries and model calibration curves.
