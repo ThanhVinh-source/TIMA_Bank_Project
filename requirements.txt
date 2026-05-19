@@ -7,3 +7,8 @@ scipy
 xgboost
 jupyter
 ipykernel
+papermill
+python-dotenv
+SQLAlchemy
+pyodbc
+requests
