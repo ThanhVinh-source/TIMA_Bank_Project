@@ -37,6 +37,12 @@
   <b>📈 Power BI</b>
 </p>
 
+<p>
+  <a href="https://app.powerbi.com/view?r=eyJrIjoiZDZlZWRmZDMtNGU3Yy00YjMyLTk3MWEtMzNjMDkxZmYwZTU3IiwidCI6IjM3MGZiM2I4LTMzMDYtNDg5MC05MDYzLWNjMDhiZTc4ODI1NyIsImMiOjEwfQ%3D%3D">
+    <img src="https://img.shields.io/badge/View%20Published%20Power%20BI%20Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black" alt="View Published Power BI Dashboard" />
+  </a>
+</p>
+
 </div>
 
 ---
