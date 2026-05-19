@@ -626,22 +626,7 @@ Recommended Power BI refresh flow:
 
 ## Dependencies
 
-The notebooks use the Python libraries listed in `requirements.txt` and `environment.yml`:
-
-- `pandas`
-- `numpy`
-- `matplotlib`
-- `seaborn`
-- `scikit-learn`
-- `scipy`
-- `xgboost`
-- `jupyter`
-- `ipykernel`
-- `papermill`
-- `python-dotenv`
-- `SQLAlchemy`
-- `pyodbc`
-- `requests`
+The notebooks use the Python libraries listed in `requirements.txt` and `environment.yml`
 
 The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The automated SQL Server load also requires a local Microsoft ODBC Driver for SQL Server that matches the driver name used in `SQLSERVER_CONNECTION_STRING`.
 
