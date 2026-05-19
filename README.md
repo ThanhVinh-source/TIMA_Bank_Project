@@ -639,18 +639,7 @@ The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The 
 - The multi-class `Risk_Level` target is rule-based and partially derived from variables used as model inputs.
 - The binary Risk/Safety model is more behavior-based, but still needs additional validation before operational use.
 - Ongoing loans are excluded from the Risk/Safety target because their final outcome is not yet known.
-
-## Future Improvements
-
-- Pin package versions after final validation for stricter reproducibility.
-- Add automated data validation checks for date logic, negative values, impossible ages, and outlier thresholds.
-- Build a reusable preprocessing pipeline with `sklearn.pipeline`.
-- Add cross-validation summaries and model calibration curves.
-- Test models on a later time period to evaluate true out-of-time predictive performance.
-- Compare rule-based labels with real repayment outcomes to measure business usefulness.
-- Add formal Power BI deployment notes, scheduled refresh settings, and gateway configuration screenshots.
-- Add incremental-load logic for SQL Server when the CRM export grows beyond full-refresh size.
-- Document feature definitions in a formal data dictionary.
+- A reusable preprocessing pipeline with `sklearn.pipeline` has not yet been implemented.
 
 ## Project Summary
 
