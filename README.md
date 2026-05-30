@@ -353,7 +353,9 @@ Selected features include:
 - Affordability and loan behavior: `Salary`, `LoanToIncomeRatio`, `LoanTermMonths`, `Loan_log`.
 - Customer profile: `Gender`, `AgeGroup`, `ProductCreditName`, `JobName`, `Hình thức cư trú`, `CityName`.
 
-The best `k` by silhouette score is `2`. The silhouette score is low, so the clusters should be interpreted as exploratory customer segments rather than perfectly separated natural groups.
+The K-Means result is weak for this dataset. The best `k` by silhouette score is `2`, but the highest silhouette score is only about `0.0795`. This very low score means the customer groups are not clearly separated in the feature space. In other words, K-Means does not discover strong natural clusters for this mixed credit-customer dataset.
+
+Because of this, K-Means is retained only as an exploratory segmentation and customer-profiling tool. It should not be interpreted as a strong or definitive customer classification method for this project. The likely reason is that the data combines numerical credit variables with many one-hot encoded categorical variables, while K-Means relies on Euclidean distance and works best when clusters are compact and clearly separated.
 
 | k | Silhouette score |
 | ---: | ---: |
@@ -381,7 +383,7 @@ Observed repayment-risk profile, excluding active loans:
 
 **High-risk customer persona from K-Means**
 
-Cluster 1 is the highest-risk segment by observed `Risk` rate, where `Risk = Late + Non-Performing` and `Safety = Completed`.
+Even though K-Means does not produce well-separated clusters, the resulting segments can still be used for exploratory profiling. Cluster 1 has the highest observed `Risk` rate, where `Risk = Late + Non-Performing` and `Safety = Completed`.
 
 | Attribute | Cluster 1 profile |
 | --- | --- |
@@ -574,7 +576,7 @@ Top grouped feature importance for the hybrid model:
 | `LoanToIncomeRatio` | 0.0217 |
 | `NumberOfLoans` | 0.0191 |
 
-The conclusion is that K-Means is more valuable for customer profiling and risk interpretation than for materially improving the supervised Risk/Safety classifier in this dataset.
+The conclusion is that K-Means does not work well as a clustering method for this dataset, based on the very low silhouette score. Its main value is limited exploratory profiling and risk interpretation, not strong segmentation or material improvement of the supervised Risk/Safety classifier.
 
 ## Key Findings
 
@@ -608,7 +610,8 @@ The conclusion is that K-Means is more valuable for customer profiling and risk 
 - SIM-based loan products show elevated risk concentration compared with some collateralized products.
 - Rental residence status and several unstable occupation groups show higher late or risky behavior.
 - Loan size is driven by a combination of income, job stability, age, product type, and collateral value.
-- K-Means identifies Cluster 1 as the higher observed-risk customer segment, with a 41.69% Risk rate versus 26.02% for Cluster 0.
+- K-Means has weak clustering quality in this dataset: the best silhouette score is only about 0.0795 at `k=2`, meaning the clusters are not clearly separated.
+- Despite weak separation, Cluster 1 can still be used as an exploratory higher observed-risk segment, with a 41.69% Risk rate versus 26.02% for Cluster 0.
 - The Cluster 1 persona is mainly lower-middle-income, low-credit-score, rental-residence borrowers, concentrated in Hanoi and Ho Chi Minh City.
 - The hybrid Random Forest + K-Means model does not outperform the tuned Random Forest baseline overall, but K-Means distance features still rank as the second most important feature group. This makes segmentation useful for explanation and monitoring, even when it does not materially improve predictive performance.
 
@@ -772,7 +775,7 @@ The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The 
 - Some very large loan amounts behave as outliers and can strongly influence averages and models.
 - The multi-class `Risk_Level` target is rule-based and partially derived from variables used as model inputs.
 - The binary Risk/Safety model is more behavior-based, but still needs additional validation before operational use.
-- K-Means segmentation has low silhouette scores, so clusters are best used for customer profiling and monitoring rather than as definitive customer classes.
+- K-Means segmentation is not effective for discovering clearly separated customer groups in this dataset. The highest silhouette score is only about 0.0795 at `k=2`, so the clusters should be treated as exploratory profiles rather than reliable natural customer classes.
 - The hybrid Random Forest + K-Means model adds interpretability through segment-distance features, but it does not outperform the tuned Random Forest baseline overall.
 - Ongoing loans are excluded from the Risk/Safety target because their final outcome is not yet known.
 - A reusable preprocessing pipeline with `sklearn.pipeline` has not yet been implemented.
