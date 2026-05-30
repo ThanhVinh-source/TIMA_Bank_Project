@@ -18,12 +18,12 @@ NOTEBOOKS = [
 ]
 
 FILES = {
-    "Dim_Customer": ROOT / "data/Dim_Fact Table/Dim_Customer.csv",
-    "Dim_Product": ROOT / "data/Dim_Fact Table/Dim_Product.csv",
-    "Dim_Date": ROOT / "data/Dim_Fact Table/Dim_Date.csv",
-    "Dim_Geography": ROOT / "data/Dim_Fact Table/Dim_Geography.csv",
-    "Dim_Geography2": ROOT / "data/Dim_Fact Table/Dim_Geography2.csv",
-    "Fact_Loans": ROOT / "data/Dim_Fact Table/Fact_Loans.csv",
+    "Dim_Customer": ROOT / "data/gold/dim_fact_table/dim/Dim_Customer.csv",
+    "Dim_Product": ROOT / "data/gold/dim_fact_table/dim/Dim_Product.csv",
+    "Dim_Date": ROOT / "data/gold/dim_fact_table/dim/Dim_Date.csv",
+    "Dim_Geography": ROOT / "data/gold/dim_fact_table/dim/Dim_Geography.csv",
+    "Dim_Geography2": ROOT / "data/gold/dim_fact_table/dim/Dim_Geography2.csv",
+    "Fact_Loans": ROOT / "data/gold/dim_fact_table/fact/Fact_Loans.csv",
 }
 
 DATES = {
