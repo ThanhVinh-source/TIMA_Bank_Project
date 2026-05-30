@@ -540,7 +540,7 @@ The final hybrid classifier is a tuned Random Forest with balanced subsampling.
 | Random Forest + K-Means | 0.7974 | 0.7765 | 0.6477 | 0.7808 | 0.8336 |
 ```
 
-Top grouped feature importance for the hybrid model:
+** Top grouped feature importance for the hybrid model:
 
 | Feature group | Importance |
 | --- | ---: |
