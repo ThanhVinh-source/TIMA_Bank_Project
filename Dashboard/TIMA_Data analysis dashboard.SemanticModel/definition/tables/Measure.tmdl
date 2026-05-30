@@ -1,0 +1,174 @@
+table Measure
+	lineageTag: 999bea89-c628-455b-b4b3-3591bd238345
+
+	measure 'NPL Ratio (%)' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        DISTINCTCOUNT( Fact_Loans[LoanID] ),
+			        Fact_Loans[LoanStatus] = "Non-Performing"
+			    ),
+			    DISTINCTCOUNT( Fact_Loans[LoanID] )
+			)
+			
+			```
+		lineageTag: 5e2255fa-7186-428d-80bf-e2e31df48b24
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Late Payment Ratio (%)' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        DISTINCTCOUNT( Fact_Loans[LoanID] ),
+			        Fact_Loans[LoanStatus] = "Late"
+			    ),
+			    DISTINCTCOUNT( Fact_Loans[LoanID] )
+			)
+			
+			```
+		lineageTag: dd917586-0237-4da2-9ff2-4bda589ae0c4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Count of LoanID by CityName' = DISTINCTCOUNT(Fact_Loans[LoanID])
+		formatString: 0
+		lineageTag: 48e890d7-fa9b-448e-a226-e65647361c0f
+
+	measure 'Avg Loan-to-Income Ratio' = AVERAGE( Fact_Loans[LoanToIncomeRatio] )
+		lineageTag: 56b1e581-10bf-4627-b883-fe2d6dc30b76
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customers with Bad Debt (%)' = ```
+			
+			DIVIDE(
+			    COUNTROWS( FILTER( Dim_Customer, Dim_Customer[HasBadDebt] = 1 ) ),
+			    COUNTROWS( Dim_Customer )
+			)
+			
+			```
+		lineageTag: dcd8e6fe-b6b9-46af-9a96-8200bb096d41
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Row Risk Color' =
+			
+			SWITCH(
+			    [Row Risk Level],
+			    "High", "#e74c3c",      // đỏ
+			    "Medium", "#f1c40f",    // vàng
+			    "#2ecc71"               // xanh
+			)
+		lineageTag: 39b06073-5c3e-4477-bfc1-82b60a32c26c
+
+	measure 'Row Risk Level' = ```
+			
+			VAR npl = [NPL Ratio (%)]
+			VAR baddebt = [Customers with Bad Debt (%)]
+			VAR lti = [Avg Loan-to-Income Ratio]
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    npl > 7 || baddebt > 15 || lti > 3.5, "High",
+			    npl > 4 || baddebt > 10 || lti > 2.5, "Medium",
+			    "Low"
+			)
+			
+			```
+		lineageTag: fd6305dc-e1ef-4d86-851d-4034412cfb7c
+
+	measure 'Customers with Low Credit Score (%)' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        COUNTROWS( Dim_Customer ),
+			        Dim_Customer[LowCreditScore] = 1
+			    ),
+			    COUNTROWS( Dim_Customer )
+			)
+			
+			```
+		lineageTag: 4cee8a00-68ef-42ba-b7fe-edf02f308283
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customer Risk Level' = ```
+			
+			VAR _creditScore = MAX( Dim_Customer[TS_CREDIT_SCORE_V2] )
+			VAR _hasBadDebt = MAX( Dim_Customer[HasBadDebt] )
+			VAR _lti = [Avg Loan-to-Income Ratio]
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    -- Rủi ro cao
+			    _hasBadDebt = 1
+			        || _creditScore < 500
+			        || _lti > 3.5, "High",
+			    -- Rủi ro trung bình
+			    (_creditScore >= 500 && _creditScore < 600)
+			        || (_lti >= 2.5 && _lti <= 3.5), "Medium",
+			    -- Rủi ro thấp
+			    "Low"
+			)
+			
+			```
+		lineageTag: e6b6477c-f35c-4ab0-907f-ec80c572253e
+
+	measure 'Customer Risk Color' = ```
+			
+			SWITCH(
+			    [Customer Risk Level],
+			    "High",   "#e74c3c",  -- đỏ
+			    "Medium", "#f1c40f",  -- vàng
+			    "#2ecc71"                -- xanh
+			)
+			
+			```
+		lineageTag: 2e0a2a22-2220-42b0-adca-63d6b789d60e
+
+	measure 'Customers with Bad LoanStatus (%)' = ```
+			
+			DIVIDE(
+			    CALCULATE(
+			        DISTINCTCOUNT( Fact_Loans[CardNumber] ),
+			        Fact_Loans[LoanStatus] = "Non-Performing"
+			    ),
+			    DISTINCTCOUNT( Dim_Customer[CardNumber] )
+			)
+			
+			```
+		lineageTag: f343e30f-bcd7-4698-b602-d5a46173b61f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customers with Late LoanStatus (%)' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        DISTINCTCOUNT( Fact_Loans[CardNumber] ),
+			        Fact_Loans[LoanStatus] = "Late"
+			    ),
+			    DISTINCTCOUNT( Dim_Customer[CardNumber] )
+			)
+		lineageTag: 735328fc-0523-446c-8ec8-fd3221f16c4e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Column
+		formatString: 0
+		lineageTag: b9933de4-1765-40db-92b6-a0060174a4ea
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measure = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 69b08dcbaa8e42bb9275cbaab709c973
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

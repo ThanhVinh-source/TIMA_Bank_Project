@@ -1,0 +1,33 @@
+table Dim_Geography
+	lineageTag: ea89f74e-9d13-4866-b303-a9c1ee162a79
+
+	column CityName
+		dataType: string
+		lineageTag: 87603047-3293-49b4-9db7-5706b8e087f3
+		summarizeBy: none
+		sourceColumn: CityName
+
+		annotation SummarizationSetBy = Automatic
+
+	column DistrictName
+		dataType: string
+		lineageTag: 4a86be12-2a95-4d1b-b3c9-759aeab58d48
+		summarizeBy: none
+		sourceColumn: DistrictName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Geography = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost,1433", "TIMA_BI"),
+				    dbo_Dim_Geography = Source{[Schema="dbo",Item="Dim_Geography"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dbo_Dim_Geography,{{"CityName", type text}, {"DistrictName", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

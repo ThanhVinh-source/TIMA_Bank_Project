@@ -1,0 +1,33 @@
+table Dim_Product
+	lineageTag: 9985d7dd-5501-4b1c-b2d1-54a24728eb6d
+
+	column ProductCreditName
+		dataType: string
+		lineageTag: 996a6c8e-7cac-4245-868d-e9cd3dfa5da2
+		summarizeBy: none
+		sourceColumn: ProductCreditName
+
+		annotation SummarizationSetBy = Automatic
+
+	column InterestPaymentType
+		dataType: string
+		lineageTag: 29b0e91f-f6d9-4ee7-a352-cd5951b62fa1
+		summarizeBy: none
+		sourceColumn: InterestPaymentType
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Product = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost,1433", "TIMA_BI"),
+				    dbo_Dim_Product = Source{[Schema="dbo",Item="Dim_Product"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dbo_Dim_Product,{{"ProductCreditName", type text}, {"InterestPaymentType", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

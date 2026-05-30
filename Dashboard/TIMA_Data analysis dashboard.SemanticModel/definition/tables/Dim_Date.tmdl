@@ -1,0 +1,99 @@
+table Dim_Date
+	lineageTag: 51eb4791-d46a-45a0-9b5b-b59e3a24a975
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6f69dba8-f470-46d8-a4b7-3aa11e86a9be
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: bdb44ab9-102e-4019-a3fc-5121a852b5fc
+			defaultHierarchy: LocalDateTable_f1bd5b69-6f5a-43f2-bc08-036eb1928f5f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 6c2adda6-5ae0-4b0e-a7e5-3f2678c35e0e
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: d7db3edc-0ef9-4780-bcaf-33c2086bf4a6
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNum
+		dataType: int64
+		formatString: 0
+		lineageTag: 4188643c-5bc5-4443-ba87-5f918cba5f9e
+		summarizeBy: sum
+		sourceColumn: MonthNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		dataType: string
+		lineageTag: 7d44a7ef-7d64-48cc-9b78-1f8a89d7a37d
+		summarizeBy: none
+		sourceColumn: MonthName
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthYear
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a90f8f52-cf87-4503-bda3-b018d7b02fb5
+		summarizeBy: none
+		sourceColumn: MonthYear
+
+		variation Variation
+			isDefault
+			relationship: 1f6b7ae4-57ef-4fa5-bc2f-c367a1d71f52
+			defaultHierarchy: LocalDateTable_87ce160d-4466-4dab-a947-7021d2ba2fe5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: b1152ccc-ed40-4ac0-aeb2-31833ce4328d
+		summarizeBy: sum
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeek
+		dataType: int64
+		formatString: 0
+		lineageTag: 8a94a356-55fa-47a8-87b0-2dd9257e13ee
+		summarizeBy: sum
+		sourceColumn: DayOfWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Date = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost,1433", "TIMA_BI"),
+				    dbo_Dim_Date = Source{[Schema="dbo",Item="Dim_Date"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dbo_Dim_Date,{{"Date", type datetime}, {"Year", Int64.Type}, {"Quarter", type text}, {"MonthNum", Int64.Type}, {"MonthName", type text}, {"MonthYear", type date}, {"Day", Int64.Type}, {"DayOfWeek", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

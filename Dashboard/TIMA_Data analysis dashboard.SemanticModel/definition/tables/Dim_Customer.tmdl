@@ -1,0 +1,143 @@
+table Dim_Customer
+	lineageTag: b1f6911b-8156-47a0-906e-4f3bb957212a
+
+	column CardNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: c1e331ad-a7b5-459b-a25f-60661976a43a
+		summarizeBy: none
+		sourceColumn: CardNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column FullName
+		dataType: string
+		lineageTag: bd592930-6411-4fa2-8ad3-c1c7bed62fbd
+		summarizeBy: none
+		sourceColumn: FullName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: 77523070-2ea2-4dbb-ba87-906084218e78
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column Birthday
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5a495f9b-796d-4b1a-bce6-0b999a9bc82b
+		summarizeBy: none
+		sourceColumn: Birthday
+
+		variation Variation
+			isDefault
+			relationship: ae072459-f8a0-4e60-98f6-37e0309c1667
+			defaultHierarchy: LocalDateTable_5643fe11-cb41-44cf-94b7-7f766b78f5b7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age
+		dataType: int64
+		formatString: 0
+		lineageTag: 093f1eb5-1fa6-4997-bb38-c6c11bf454a2
+		summarizeBy: sum
+		sourceColumn: Age
+
+		annotation SummarizationSetBy = Automatic
+
+	column AgeGroup
+		dataType: string
+		lineageTag: 2e21ad21-25f3-4672-89d5-cf7696bdda8b
+		summarizeBy: none
+		sourceColumn: AgeGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	column JobName
+		dataType: string
+		lineageTag: 13fd99ac-97f1-4388-ae28-29459a205851
+		summarizeBy: none
+		sourceColumn: JobName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Salary
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 01ed9a95-1ebd-48f0-bd75-1e345effe9e6
+		summarizeBy: sum
+		sourceColumn: Salary
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Hình thức cư trú'
+		dataType: string
+		lineageTag: 78051db0-b371-433d-81ad-a719ed793a50
+		summarizeBy: none
+		sourceColumn: Hình thức cư trú
+
+		annotation SummarizationSetBy = Automatic
+
+	column TS_CREDIT_SCORE_V2
+		dataType: int64
+		formatString: 0
+		lineageTag: 5dacf3ed-def3-4aaf-bd80-4b7d42f82f25
+		summarizeBy: sum
+		sourceColumn: TS_CREDIT_SCORE_V2
+
+		annotation SummarizationSetBy = Automatic
+
+	column LowCreditScore
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e1243ca-e48b-4f3e-9b5a-4540a6470866
+		summarizeBy: sum
+		sourceColumn: LowCreditScore
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreditScoreGroup
+		dataType: string
+		lineageTag: 5986f9a7-5ca7-4e8b-9ab0-1bb56dc117d2
+		summarizeBy: none
+		sourceColumn: CreditScoreGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncomeBracket
+		dataType: string
+		lineageTag: 3baca39b-fd21-4f19-ac97-463db31d8082
+		summarizeBy: none
+		sourceColumn: IncomeBracket
+
+		annotation SummarizationSetBy = Automatic
+
+	column HasBadDebt
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ed2edb1-63bd-45ca-be57-7dbeff5c60ce
+		summarizeBy: sum
+		sourceColumn: HasBadDebt
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Customer = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost,1433", "TIMA_BI"),
+				    dbo_Dim_Customer = Source{[Schema="dbo",Item="Dim_Customer"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dbo_Dim_Customer,{{"CardNumber", Int64.Type}, {"FullName", type text}, {"Gender", type text}, {"Birthday", type datetime}, {"Age", Int64.Type}, {"AgeGroup", type text}, {"JobName", type text}, {"Salary", Currency.Type}, {"Hình thức cư trú", type text}, {"TS_CREDIT_SCORE_V2", Int64.Type}, {"LowCreditScore", Int64.Type}, {"CreditScoreGroup", type text}, {"IncomeBracket", type text}, {"HasBadDebt", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

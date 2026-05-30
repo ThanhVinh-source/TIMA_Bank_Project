@@ -1,0 +1,33 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+/// Errors in queries that were loaded on 5/16/2026 2:06:20 AM.
+queryGroup 'Query Errors - 5/16/2026 2:06:20 AM'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation PBI_QueryOrder = ["Dim_Customer","Dim_Date","Dim_Geography","Dim_Geography2","Dim_Product","Fact_Loans","Errors in Dim_Customer"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Measure
+ref table Dim_Customer
+ref table DateTableTemplate_2ddf76ba-9161-4ee0-a20d-2c79fae8c88c
+ref table LocalDateTable_5643fe11-cb41-44cf-94b7-7f766b78f5b7
+ref table Dim_Date
+ref table LocalDateTable_f1bd5b69-6f5a-43f2-bc08-036eb1928f5f
+ref table LocalDateTable_87ce160d-4466-4dab-a947-7021d2ba2fe5
+ref table Dim_Geography
+ref table Dim_Geography2
+ref table Dim_Product
+ref table Fact_Loans
+
+ref cultureInfo en-US
+

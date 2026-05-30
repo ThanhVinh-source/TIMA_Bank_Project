@@ -1,0 +1,40 @@
+relationship ae072459-f8a0-4e60-98f6-37e0309c1667
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Dim_Customer.Birthday
+	toColumn: LocalDateTable_5643fe11-cb41-44cf-94b7-7f766b78f5b7.Date
+
+relationship bdb44ab9-102e-4019-a3fc-5121a852b5fc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Dim_Date.Date
+	toColumn: LocalDateTable_f1bd5b69-6f5a-43f2-bc08-036eb1928f5f.Date
+
+relationship 1f6b7ae4-57ef-4fa5-bc2f-c367a1d71f52
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Dim_Date.MonthYear
+	toColumn: LocalDateTable_87ce160d-4466-4dab-a947-7021d2ba2fe5.Date
+
+relationship AutoDetected_d5035280-fb30-4090-be3f-bcf2834055cd
+	crossFilteringBehavior: bothDirections
+	fromColumn: Fact_Loans.CardNumber
+	toColumn: Dim_Customer.CardNumber
+
+relationship AutoDetected_a50a8c34-017a-4631-b3fb-6b4587c32eaa
+	crossFilteringBehavior: bothDirections
+	fromColumn: Dim_Geography.CityName
+	toColumn: Dim_Geography2.CityName
+
+relationship AutoDetected_03e7ecde-15b3-46f9-8e85-36688e182243
+	crossFilteringBehavior: bothDirections
+	fromColumn: Fact_Loans.CityName
+	toColumn: Dim_Geography2.CityName
+
+relationship AutoDetected_70f4d3bb-d426-4726-9e70-ee02d2fedb32
+	crossFilteringBehavior: bothDirections
+	fromColumn: Fact_Loans.ProductCreditName
+	toColumn: Dim_Product.ProductCreditName
+
+relationship e18c11eb-4ce5-59bf-449f-456966e6761d
+	crossFilteringBehavior: bothDirections
+	fromColumn: Fact_Loans.application_date
+	toColumn: Dim_Date.Date
+

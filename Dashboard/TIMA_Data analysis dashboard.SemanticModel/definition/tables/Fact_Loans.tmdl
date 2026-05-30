@@ -1,0 +1,147 @@
+table Fact_Loans
+	lineageTag: 1294ae42-37a4-4f98-9861-ce103c7a5c95
+
+	column LoanID
+		dataType: int64
+		formatString: 0
+		lineageTag: 901f5a82-9fb3-4f98-80cb-b40927562d52
+		summarizeBy: count
+		sourceColumn: LoanID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CardNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: 63780b94-bc5f-4eb7-a181-ff7569e97dc5
+		summarizeBy: none
+		sourceColumn: CardNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductCreditName
+		dataType: string
+		lineageTag: 9a4dace4-4640-4bdb-9eb9-4d0ea47c658c
+		summarizeBy: none
+		sourceColumn: ProductCreditName
+
+		annotation SummarizationSetBy = Automatic
+
+	column application_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 03621f2b-c0a3-44d8-9315-9be408bbb699
+		summarizeBy: none
+		sourceColumn: application_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column CityName
+		dataType: string
+		lineageTag: b8200cd4-3d4d-4e24-babd-de80169d60cf
+		summarizeBy: none
+		sourceColumn: CityName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Số tiền đăng ký vay ban đầu'
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 770c1313-07f8-45f3-b466-003aae9d577d
+		summarizeBy: sum
+		sourceColumn: Số tiền đăng ký vay ban đầu
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Tiền giải ngân'
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 658e9aba-d04f-41a8-8adf-8d469f51d06f
+		summarizeBy: sum
+		sourceColumn: Tiền giải ngân
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Cần Giải Ngân'
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 8aaceb83-c707-4191-a362-38c3f05c55b7
+		summarizeBy: sum
+		sourceColumn: Cần Giải Ngân
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column LongestOverdue
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e06139b-9af4-461b-b789-c51fc8d925e2
+		summarizeBy: sum
+		sourceColumn: LongestOverdue
+
+		annotation SummarizationSetBy = Automatic
+
+	column LoanTermMonths
+		dataType: int64
+		formatString: 0
+		lineageTag: e84bf7a3-fdd3-4d58-862f-701d73f6dabc
+		summarizeBy: sum
+		sourceColumn: LoanTermMonths
+
+		annotation SummarizationSetBy = Automatic
+
+	column LoanToIncomeRatio
+		dataType: double
+		lineageTag: ff316cb8-d9b0-49d2-b232-8647a09f5148
+		summarizeBy: sum
+		sourceColumn: LoanToIncomeRatio
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column HasLatePayment
+		dataType: int64
+		formatString: 0
+		lineageTag: 71e72307-acc6-48a7-8e3d-7cc7b47844de
+		summarizeBy: sum
+		sourceColumn: HasLatePayment
+
+		annotation SummarizationSetBy = Automatic
+
+	column HasBadDebt
+		dataType: int64
+		formatString: 0
+		lineageTag: f7db680e-9317-4182-9daf-6e6c739a4247
+		summarizeBy: sum
+		sourceColumn: HasBadDebt
+
+		annotation SummarizationSetBy = Automatic
+
+	column LoanStatus
+		dataType: string
+		lineageTag: 9c9c9e0c-deac-4c7e-bdd7-66786e40cbe5
+		summarizeBy: none
+		sourceColumn: LoanStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Loans = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost,1433", "TIMA_BI"),
+				    dbo_Fact_Loans = Source{[Schema="dbo",Item="Fact_Loans"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dbo_Fact_Loans,{{"LoanID", Int64.Type}, {"CardNumber", Int64.Type}, {"ProductCreditName", type text}, {"application_date", type datetime}, {"CityName", type text}, {"Số tiền đăng ký vay ban đầu", Currency.Type}, {"Tiền giải ngân", Currency.Type}, {"Cần Giải Ngân", Currency.Type}, {"LongestOverdue", Int64.Type}, {"LoanTermMonths", Int64.Type}, {"LoanToIncomeRatio", type number}, {"HasLatePayment", Int64.Type}, {"HasBadDebt", Int64.Type}, {"LoanStatus", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
