@@ -7,3 +7,7 @@ __pycache__/
 .ipynb_checkpoints/
 .vscode/
 runs/
+
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
+**/.pbi/editorSettings.json
