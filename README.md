@@ -538,30 +538,7 @@ The final hybrid classifier is a tuned Random Forest with balanced subsampling.
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Random Forest | 0.7974 | 0.7784 | 0.6429 | 0.8014 | 0.8366 |
 | Random Forest + K-Means | 0.7974 | 0.7765 | 0.6477 | 0.7808 | 0.8336 |
-
-Hybrid model test classification report:
-
-| Class | Precision | Recall | F1-score | Support |
-| --- | ---: | ---: | ---: | ---: |
-| Risk | 0.65 | 0.78 | 0.71 | 146 |
-| Safety | 0.89 | 0.81 | 0.84 | 318 |
-
-Best tuned Random Forest + K-Means parameters:
-
-```text
-bootstrap=True
-max_depth=5
-max_features=0.5
-min_samples_leaf=10
-min_samples_split=46
-n_estimators=360
 ```
-
-**Hybrid model explanation**
-
-The hybrid model performs almost the same as the tuned Random Forest baseline. It slightly improves `Risk` precision from `0.6429` to `0.6477`, but reduces `Risk` recall from `0.8014` to `0.7808`, and its AUC decreases slightly from `0.8366` to `0.8336`. This means K-Means features add useful segmentation context, but they do not produce a stronger overall classifier than the supervised Random Forest.
-
-Feature importance supports this interpretation. `LoanTermMonths` remains the dominant predictor with importance `0.6000`. K-Means distance features are the second strongest feature group with grouped importance `0.1433`, ahead of product type and residence type. However, raw cluster membership itself has very low importance (`0.0005`). In practical terms, the customer's distance from behavioral segments carries more signal than simply assigning them to a hard cluster label.
 
 Top grouped feature importance for the hybrid model:
 
@@ -599,7 +576,7 @@ The conclusion is that K-Means does not work well as a clustering method for thi
 ### Customer Profile
 
 - The borrower base is concentrated in young working-age customers, especially the 26-35 age group.
-- Female customers are the majority in the dataset.
+- Male customers are the majority in the dataset.
 - Customers are highly concentrated in Hanoi, with Ho Chi Minh City as the second major market.
 - Salary is concentrated around lower-middle income bands, especially 5-10 million VND.
 
