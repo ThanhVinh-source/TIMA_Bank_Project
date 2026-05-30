@@ -56,6 +56,7 @@ The work is designed to answer practical lending questions:
 - 🧑‍💼 Who are TIMA's core borrowers?
 - 💰 Which products drive loan volume and disbursement value?
 - ⚠️ Which customer, product, income, geography, and credit-history signals are associated with late payment or bad debt?
+- 👥 Which customer segments show a higher observed Risk rate?
 - 🤖 Can historical loan information support an early-warning credit risk model?
 - 🗂️ How can the cleaned data be reshaped into fact and dimension tables for BI reporting?
 - 🔁 How can the refresh flow be automated from notebooks to SQL Server and Power BI?
@@ -132,14 +133,15 @@ The project works with TIMA CRM loan records. The cleaned analytical file contai
 
 | File | Description |
 | --- | --- |
-| `data/Tima_CRM - Data.csv` | Original CRM export with raw customer, loan, product, location, income, credit, and repayment fields. |
-| `data/tima_cleaned_data_v1.csv` | Cleaned and enriched analytical dataset used for EDA and modeling. |
-| `data/Dim_Fact Table/Fact_Loans.csv` | Loan-level fact table for BI reporting. |
-| `data/Dim_Fact Table/Dim_Customer.csv` | Customer dimension with demographic, job, income, and risk attributes. |
-| `data/Dim_Fact Table/Dim_Product.csv` | Product dimension with credit product and interest payment type. |
-| `data/Dim_Fact Table/Dim_Date.csv` | Date dimension generated from application dates. |
-| `data/Dim_Fact Table/Dim_Geography.csv` | Geography dimension at city and district level. |
-| `data/Dim_Fact Table/Dim_Geography2.csv` | Simplified geography dimension at city level. |
+| `data/bronze/Tima_CRM - Data.csv` | Raw CRM export with customer, loan, product, location, income, credit, and repayment fields. |
+| `data/silver/tima_cleaned_data_v1.csv` | Cleaned and enriched analytical dataset used for EDA and modeling. |
+| `data/silver/tima_cleaned_with_clusters.csv` | Analytical dataset with K-Means customer cluster labels. |
+| `data/gold/dim_fact_table/fact/Fact_Loans.csv` | Loan-level fact table for the Data Warehouse and Semantic Model. |
+| `data/gold/dim_fact_table/dim/Dim_Customer.csv` | Customer dimension with demographic, job, income, and risk attributes. |
+| `data/gold/dim_fact_table/dim/Dim_Product.csv` | Product dimension with credit product and interest payment type. |
+| `data/gold/dim_fact_table/dim/Dim_Date.csv` | Date dimension generated from application dates. |
+| `data/gold/dim_fact_table/dim/Dim_Geography.csv` | Geography dimension at city and district level. |
+| `data/gold/dim_fact_table/dim/Dim_Geography2.csv` | Simplified geography dimension at city level. |
 
 ### Automation and reporting files
 
@@ -184,6 +186,8 @@ The project works with TIMA CRM loan records. The cleaned analytical file contai
 | `CreditScoreGroup` | Credit score bucket: Low, Medium, Good, Excellent. |
 | `IncomeBracket` | Salary bucket: `<5m`, `5-10m`, `10-15m`, `15-25m`, `>=25m`. |
 | `LoanStatus` | Standardized business status: `Hoàn thành`, `Muộn`, `Nợ xấu`, `Đang vay`. |
+| `CustomerCluster` | K-Means cluster id generated in the modeling notebook. |
+| `CustomerClusterLabel` | Human-readable K-Means cluster label such as `Cluster 0` and `Cluster 1`. |
 
 <a id="dataset-note"></a>
 
@@ -201,7 +205,7 @@ Run the notebooks in this order for the clearest project flow.
 | --- | --- | --- |
 | 1 | `notebook/data_understanding.ipynb` | Loads the raw CRM file, checks shape, data types, missing values, duplicate records, and performs first-stage cleaning. |
 | 2 | `notebook/data_cleaning_preprocessing.ipynb` | Builds analytical features, creates loan status labels, checks final nulls, and exports the cleaned dataset. |
-| 3 | `notebook/data_analysis_and_predictive_modeling.ipynb` | Performs exploratory analysis, risk segmentation, model training, model tuning, AUC evaluation, and feature importance analysis. |
+| 3 | `notebook/data_analysis_and_predictive_modeling.ipynb` | Performs EDA, K-Means customer segmentation, risk modeling, hybrid modeling, AUC evaluation, and feature importance analysis. |
 | 4 | `notebook/create_dim_fact_table.ipynb` | Converts the cleaned flat dataset into BI-friendly fact and dimension tables. |
 
 For production-style refreshes, `scripts/run_pipeline.py` automates notebooks 1, 2, and 4, then pushes the final dimensional tables into SQL Server. The modeling notebook remains an analytical notebook and is not part of the automated SQL Server load.
@@ -210,18 +214,20 @@ For production-style refreshes, `scripts/run_pipeline.py` automates notebooks 1,
 
 ```mermaid
 flowchart LR
-    A["Raw CRM data<br/>Tima_CRM - Data.csv"] --> B["Data understanding<br/>types, nulls, duplicates"]
-    B --> C["Cleaning and preprocessing<br/>standardized values"]
+    A["Bronze<br/>Raw CRM data"] --> B["Data understanding<br/>types, nulls, duplicates"]
+    B --> C["Silver<br/>cleaning and preprocessing"]
     C --> D["Feature engineering<br/>risk, income, age, loan behavior"]
-    D --> E["Clean analytical dataset<br/>tima_cleaned_data_v1.csv"]
-    E --> F["EDA and predictive modeling"]
-    E --> G["Dimensional model"]
-    G --> H["Fact and dimension CSV tables"]
+    D --> E["Silver dataset<br/>tima_cleaned_data_v1.csv"]
+    E --> F["EDA, K-Means segmentation<br/>and predictive modeling"]
+    F --> M["Clustered Silver dataset<br/>tima_cleaned_with_clusters.csv"]
+    E --> G["Gold dimensional model"]
+    G --> H["Gold Dim/Fact CSV tables"]
     H --> I["run_pipeline.py<br/>automated delivery"]
     I --> J["SQL Server<br/>Dim_* and Fact_Loans"]
-    J --> K["Power BI dashboard"]
+    J --> K["Power BI Semantic Model<br/>PBIP/TMDL"]
+    K --> N["Power BI dashboard<br/>PBIX/report visuals"]
     I -. optional webhook .-> L["Power Automate<br/>dataset refresh"]
-    L -. refresh .-> K
+    L -. refresh .-> N
 ```
 
 ## How to Run
@@ -284,7 +290,7 @@ Run:
 python scripts/run_pipeline.py
 ```
 
-This command regenerates the cleaned dataset and dimensional outputs, loads them into SQL Server, and optionally triggers Power Automate for Power BI refresh.
+This command regenerates the Silver cleaned dataset and Gold dimensional outputs, loads the Gold Dim/Fact tables into SQL Server, and optionally triggers Power Automate for Power BI refresh.
 
 ### 6. Rebuild outputs manually
 
@@ -296,7 +302,7 @@ To regenerate the cleaned dataset and dimensional tables:
 
 To rerun the analysis and models:
 
-1. Make sure `data/tima_cleaned_data_v1.csv` exists.
+1. Make sure `data/silver/tima_cleaned_data_v1.csv` exists.
 2. Run `notebook/data_analysis_and_predictive_modeling.ipynb`.
 
 ## Analytical Themes
@@ -335,7 +341,72 @@ The analysis is organized around four major lenses.
 
 ## Modeling Approach
 
-The project contains two modeling tracks.
+The project contains four modeling components: unsupervised customer segmentation, a rule-based multi-class risk experiment, a behavior-based Risk/Safety model, and a hybrid model that adds K-Means signals to Random Forest.
+
+### K-Means Customer Segmentation
+
+K-Means is used to segment borrowers based on credit profile, affordability, product, job, residence type, geography, and borrowing behavior. The model uses standardized numeric variables and one-hot encoded categorical variables.
+
+Selected features include:
+
+- Credit and history: `TS_CREDIT_SCORE_V2`, `HasBadDebt`, `HasLatePayment`, `NumberOfLoans`.
+- Affordability and loan behavior: `Salary`, `LoanToIncomeRatio`, `LoanTermMonths`, `Loan_log`.
+- Customer profile: `Gender`, `AgeGroup`, `ProductCreditName`, `JobName`, `Hình thức cư trú`, `CityName`.
+
+The best `k` by silhouette score is `2`. The silhouette score is low, so the clusters should be interpreted as exploratory customer segments rather than perfectly separated natural groups.
+
+| k | Silhouette score |
+| ---: | ---: |
+| 2 | 0.0795 |
+| 3 | 0.0355 |
+| 4 | 0.0412 |
+| 5 | 0.0501 |
+| 6 | 0.0596 |
+| 7 | 0.0632 |
+| 8 | 0.0595 |
+
+Cluster size:
+
+| Cluster | Records | Share |
+| --- | ---: | ---: |
+| Cluster 0 | 1,528 | 64.12% |
+| Cluster 1 | 855 | 35.88% |
+
+Observed repayment-risk profile, excluding active loans:
+
+| Cluster | Observed records | Risk count | Risk rate | Avg credit score | Avg salary | Avg loan-to-income ratio |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Cluster 1 | 818 | 341 | 41.69% | 597.43 | 9,214,584 | 0.94 |
+| Cluster 0 | 1,499 | 390 | 26.02% | 584.09 | 10,476,510 | 1.63 |
+
+**High-risk customer persona from K-Means**
+
+Cluster 1 is the highest-risk segment by observed `Risk` rate, where `Risk = Late + Non-Performing` and `Safety = Completed`.
+
+| Attribute | Cluster 1 profile |
+| --- | --- |
+| Observed records | 818 |
+| Risk rate | 41.69% |
+| Main product | `Cầm cố xe máy` |
+| Main job group | `Khác` |
+| Main residence type | `Thuê` |
+| Main income bracket | `5-10m` |
+| Main credit score group | `Low (High Risk)` |
+| Main city | `Hà Nội` |
+| Average credit score | 597.43 |
+| Average salary | 9,214,584 VND |
+| Average loan-to-income ratio | 0.94 |
+| Bad debt history rate | 10.88% |
+| Late payment history rate | 14.55% |
+
+Within Cluster 1, the most concentrated risk pockets are more specific than the cluster label itself:
+
+- Product risk is highest for `Cầm cố Điện thoại` inside Cluster 1, with a 59.51% Risk rate, followed by `Vay theo sim` at 43.97%.
+- Ho Chi Minh City borrowers inside Cluster 1 have a 55.27% Risk rate, higher than Hanoi at 36.38%.
+- Rental residence (`Thuê`) is both common and risky inside Cluster 1, with a 53.07% Risk rate.
+- The dominant customer shape is young working-age borrowers, mostly `18-35`, lower-middle income, low-to-medium credit score, and concentrated in Hanoi and Ho Chi Minh City.
+
+The clustered dataset is exported as `data/silver/tima_cleaned_with_clusters.csv`.
 
 ### Track 1: Rule-Based Multi-Class Risk Level
 
@@ -451,6 +522,60 @@ For the Risk/Safety target, the tuned Random Forest produced the strongest obser
 - `Salary`
 - `CityName_Hà Nội`
 
+### Hybrid Model (K-Means + Random Forest)
+
+The hybrid model adds K-Means-derived features to the supervised Risk/Safety classifier:
+
+- One-hot cluster membership features such as `KMeansCluster_*`.
+- Cluster-distance features such as `KMeansDistance_*`, which measure how close each customer is to each K-Means centroid.
+- Original Risk/Safety features from Track 2.
+
+The final hybrid classifier is a tuned Random Forest with balanced subsampling.
+
+| Model | Test Accuracy | Test F1 Macro | Test Precision Risk | Test Recall Risk | Test AUC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Random Forest | 0.7974 | 0.7784 | 0.6429 | 0.8014 | 0.8366 |
+| Random Forest + K-Means | 0.7974 | 0.7765 | 0.6477 | 0.7808 | 0.8336 |
+
+Hybrid model test classification report:
+
+| Class | Precision | Recall | F1-score | Support |
+| --- | ---: | ---: | ---: | ---: |
+| Risk | 0.65 | 0.78 | 0.71 | 146 |
+| Safety | 0.89 | 0.81 | 0.84 | 318 |
+
+Best tuned Random Forest + K-Means parameters:
+
+```text
+bootstrap=True
+max_depth=5
+max_features=0.5
+min_samples_leaf=10
+min_samples_split=46
+n_estimators=360
+```
+
+**Hybrid model explanation**
+
+The hybrid model performs almost the same as the tuned Random Forest baseline. It slightly improves `Risk` precision from `0.6429` to `0.6477`, but reduces `Risk` recall from `0.8014` to `0.7808`, and its AUC decreases slightly from `0.8366` to `0.8336`. This means K-Means features add useful segmentation context, but they do not produce a stronger overall classifier than the supervised Random Forest.
+
+Feature importance supports this interpretation. `LoanTermMonths` remains the dominant predictor with importance `0.6000`. K-Means distance features are the second strongest feature group with grouped importance `0.1433`, ahead of product type and residence type. However, raw cluster membership itself has very low importance (`0.0005`). In practical terms, the customer's distance from behavioral segments carries more signal than simply assigning them to a hard cluster label.
+
+Top grouped feature importance for the hybrid model:
+
+| Feature group | Importance |
+| --- | ---: |
+| `LoanTermMonths` | 0.6000 |
+| `KMeansDistance` | 0.1433 |
+| `ProductCreditName` | 0.0805 |
+| `ResidenceType` | 0.0465 |
+| `Loan_log` | 0.0286 |
+| `TS_CREDIT_SCORE_V2` | 0.0238 |
+| `LoanToIncomeRatio` | 0.0217 |
+| `NumberOfLoans` | 0.0191 |
+
+The conclusion is that K-Means is more valuable for customer profiling and risk interpretation than for materially improving the supervised Risk/Safety classifier in this dataset.
+
 ## Key Findings
 
 ### Loan Size and Product Mix
@@ -483,6 +608,9 @@ For the Risk/Safety target, the tuned Random Forest produced the strongest obser
 - SIM-based loan products show elevated risk concentration compared with some collateralized products.
 - Rental residence status and several unstable occupation groups show higher late or risky behavior.
 - Loan size is driven by a combination of income, job stability, age, product type, and collateral value.
+- K-Means identifies Cluster 1 as the higher observed-risk customer segment, with a 41.69% Risk rate versus 26.02% for Cluster 0.
+- The Cluster 1 persona is mainly lower-middle-income, low-credit-score, rental-residence borrowers, concentrated in Hanoi and Ho Chi Minh City.
+- The hybrid Random Forest + K-Means model does not outperform the tuned Random Forest baseline overall, but K-Means distance features still rank as the second most important feature group. This makes segmentation useful for explanation and monitoring, even when it does not materially improve predictive performance.
 
 ## Automated Pipeline, SQL Server, and Power BI
 
@@ -495,7 +623,7 @@ The project includes `scripts/run_pipeline.py` for a repeatable refresh flow fro
    - `notebook/data_cleaning_preprocessing.ipynb`
    - `notebook/create_dim_fact_table.ipynb`
 2. Stores executed notebook copies in `runs/` for audit/debugging.
-3. Reads the final CSV outputs from `data/Dim_Fact Table/`.
+3. Reads the final Gold CSV outputs from `data/gold/dim_fact_table/`.
 4. Validates key table quality rules:
    - `Fact_Loans.LoanID` must not contain null values.
    - `Dim_Customer.CardNumber` must be unique.
@@ -508,12 +636,12 @@ The pipeline writes these tables to the schema defined by `SQL_SCHEMA`:
 
 | SQL Server table | Source CSV |
 | --- | --- |
-| `Dim_Customer` | `data/Dim_Fact Table/Dim_Customer.csv` |
-| `Dim_Product` | `data/Dim_Fact Table/Dim_Product.csv` |
-| `Dim_Date` | `data/Dim_Fact Table/Dim_Date.csv` |
-| `Dim_Geography` | `data/Dim_Fact Table/Dim_Geography.csv` |
-| `Dim_Geography2` | `data/Dim_Fact Table/Dim_Geography2.csv` |
-| `Fact_Loans` | `data/Dim_Fact Table/Fact_Loans.csv` |
+| `Dim_Customer` | `data/gold/dim_fact_table/dim/Dim_Customer.csv` |
+| `Dim_Product` | `data/gold/dim_fact_table/dim/Dim_Product.csv` |
+| `Dim_Date` | `data/gold/dim_fact_table/dim/Dim_Date.csv` |
+| `Dim_Geography` | `data/gold/dim_fact_table/dim/Dim_Geography.csv` |
+| `Dim_Geography2` | `data/gold/dim_fact_table/dim/Dim_Geography2.csv` |
+| `Fact_Loans` | `data/gold/dim_fact_table/fact/Fact_Loans.csv` |
 
 During each run, the script first creates `stg_*` tables, then replaces the final tables with the refreshed versions. Because this is a full-refresh load, make sure the target schema is dedicated to this project or that replacing these tables is acceptable.
 
@@ -644,6 +772,8 @@ The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The 
 - Some very large loan amounts behave as outliers and can strongly influence averages and models.
 - The multi-class `Risk_Level` target is rule-based and partially derived from variables used as model inputs.
 - The binary Risk/Safety model is more behavior-based, but still needs additional validation before operational use.
+- K-Means segmentation has low silhouette scores, so clusters are best used for customer profiling and monitoring rather than as definitive customer classes.
+- The hybrid Random Forest + K-Means model adds interpretability through segment-distance features, but it does not outperform the tuned Random Forest baseline overall.
 - Ongoing loans are excluded from the Risk/Safety target because their final outcome is not yet known.
 - A reusable preprocessing pipeline with `sklearn.pipeline` has not yet been implemented.
 
