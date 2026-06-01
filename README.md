@@ -98,7 +98,6 @@ The work is designed to answer practical lending questions:
 
 ## Repository Structure
 
-
 ```text
 TIMA_Bank_Project/
 ├── data/
