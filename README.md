@@ -98,23 +98,39 @@ The work is designed to answer practical lending questions:
 
 ## Repository Structure
 
+
 ```text
 TIMA_Bank_Project/
 ├── data/
-│   ├── Tima_CRM - Data.csv
-│   ├── tima_cleaned_data_v1.csv
-│   └── Dim_Fact Table/
-│       ├── Dim_Customer.csv
-│       ├── Dim_Date.csv
-│       ├── Dim_Geography.csv
-│       ├── Dim_Geography2.csv
-│       ├── Dim_Product.csv
-│       └── Fact_Loans.csv
+│   ├── bronze/
+│   │   └── Tima_CRM - Data.csv
+│   ├── silver/
+│   │   ├── tima_cleaned_data_v1.csv
+│   │   └── tima_cleaned_with_clusters.csv
+│   └── gold/
+│       ├── dim_fact_table/
+│       │   ├── dim/
+│       │   │   ├── Dim_Customer.csv
+│       │   │   ├── Dim_Date.csv
+│       │   │   ├── Dim_Geography.csv
+│       │   │   ├── Dim_Geography2.csv
+│       │   │   └── Dim_Product.csv
+│       │   └── fact/
+│       │       └── Fact_Loans.csv
+│       └── semantic_model/
+│           └── powerbi/
+│               ├── TIMA_Data analysis dashboard.pbip
+│               ├── TIMA_Data analysis dashboard.Report/
+│               └── TIMA_Data analysis dashboard.SemanticModel/
 ├── notebook/
 │   ├── data_understanding.ipynb
 │   ├── data_cleaning_preprocessing.ipynb
 │   ├── data_analysis_and_predictive_modeling.ipynb
 │   └── create_dim_fact_table.ipynb
+├── runs/
+│   ├── 01_data_understanding.ipynb
+│   ├── 02_data_cleaning_preprocessing.ipynb
+│   └── 03_create_dim_fact_table.ipynb
 ├── scripts/
 │   └── run_pipeline.py
 ├── Dashboard/
