@@ -569,6 +569,55 @@ Top grouped feature importance for the hybrid model:
 
 The conclusion is that K-Means does not work well as a clustering method for this dataset, based on the very low silhouette score. Its main value is limited exploratory profiling and risk interpretation, not strong segmentation or material improvement of the supervised Risk/Safety classifier.
 
+### SHAP Model Explainability
+
+SHAP is applied directly to the tuned Random Forest Risk/Safety model to explain predictions for the positive class, `Risk`. Unlike standard feature importance, SHAP shows both the overall strength of each feature and the direction in which feature values push predictions toward `Risk` or `Safety`.
+
+The SHAP summary plots are computed from the full encoded test feature matrix, not from the previous top-20 feature-importance table. The top features shown in the SHAP plots are selected by mean absolute SHAP value.
+
+**Global SHAP insights**
+
+- `LoanTermMonths` is the strongest driver of the model's Risk/Safety decisions. It has the highest SHAP impact at both the individual-feature level and the grouped-feature level.
+- Customer context variables also matter. After loan term, the strongest groups are `ResidenceType`, `ProductCreditName`, and `CityName`, showing that housing stability, loan product type, and borrower location help the model separate `Risk` from `Safety`.
+- Traditional credit-profile variables such as `TS_CREDIT_SCORE_V2`, `HasLatePayment`, and `HasBadDebt` are still useful, but they are not the dominant signals in this behavior-based model. This differs from Track 1, where credit score and bad-debt history dominate because they are used to create the rule-based target.
+- Grouping one-hot encoded variables makes the explanation more business-readable. For example, individual columns such as `ProductCreditName_Vay theo sim` and `Hình thức cư trú_Thuê` are aggregated back into `ProductCreditName` and `ResidenceType`.
+
+Grouped SHAP importance for the tuned Random Forest:
+
+| Feature group | MeanAbsSHAP |
+| --- | ---: |
+| `LoanTermMonths` | 0.2437 |
+| `ResidenceType` | 0.0486 |
+| `ProductCreditName` | 0.0400 |
+| `CityName` | 0.0315 |
+| `NumberOfLoans` | 0.0128 |
+| `TS_CREDIT_SCORE_V2` | 0.0119 |
+| `JobName` | 0.0110 |
+| `LoanToIncomeRatio` | 0.0089 |
+| `Loan_log` | 0.0078 |
+| `Salary` | 0.0054 |
+| `IncomeBracket` | 0.0033 |
+| `AgeGroup` | 0.0007 |
+| `Gender` | 0.0006 |
+| `HasLatePayment` | 0.0005 |
+| `HasBadDebt` | 0.0003 |
+
+**Local SHAP example**
+
+For one test customer, the actual label is `Safety`, and the model predicts a `Risk` probability of `0.3078`. Since this probability is below `0.50`, the model classifies the customer as more likely to be `Safety` than `Risk`.
+
+The waterfall explanation starts from the model's average expected risk level, then shows how each feature increases or decreases the final predicted risk probability. Blue SHAP contributions decrease the predicted `Risk` probability, while red contributions increase it.
+
+For this customer, the strongest risk-reducing factors are:
+
+- `LoanTermMonths = 5`, reducing predicted risk by about `0.08`.
+- Not being in the `Hình thức cư trú_Thuê` category, reducing predicted risk by about `0.05`.
+- Being a `Nhân viên chính thức`, having `NumberOfLoans = 2`, not using the `Vay theo sim` product, and having a credit score of `692`, each pushing the prediction slightly toward `Safety`.
+
+A few variables increase the predicted risk slightly, such as not being in `CityName_Hà Nội` and having a salary of `10,000,000`, but these effects are small compared with the risk-reducing factors. Overall, SHAP explains how the feature contributions reduce this customer's predicted risk from the average level to about `0.3078`, matching the actual `Safety` label.
+
+Business interpretation: the model does not rely only on credit score or historical bad debt. Loan duration, product category, residence type, and location should also be monitored as early-warning indicators. SHAP explains the trained model's behavior, not direct causality.
+
 ## Key Findings
 
 ### Loan Size and Product Mix

@@ -12,3 +12,4 @@ python-dotenv
 SQLAlchemy
 pyodbc
 requests
+shap
