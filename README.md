@@ -134,6 +134,8 @@ TIMA_Bank_Project/
 │   └── run_pipeline.py
 ├── Dashboard/
 │   └── TIMA_Data analysis dashboard.pbix
+├── docker-compose.yml
+├── .env.example
 ├── .gitignore
 ├── environment.yml
 ├── requirements.txt
@@ -238,7 +240,7 @@ flowchart LR
     E --> G["Gold dimensional model"]
     G --> H["Gold Dim/Fact CSV tables"]
     H --> I["run_pipeline.py<br/>automated delivery"]
-    I --> J["SQL Server<br/>Dim_* and Fact_Loans"]
+    I --> J["SQL Server (Docker)<br/>Dim_* and Fact_Loans"]
     J --> K["Power BI Semantic Model<br/>PBIP/TMDL"]
     K --> N["Power BI dashboard<br/>PBIX/report visuals"]
     I -. optional webhook .-> L["Power Automate<br/>dataset refresh"]
@@ -290,14 +292,21 @@ jupyter notebook
 
 Then open the notebooks from the `notebook/` directory and run them in the recommended order.
 
-### 5. Run the automated SQL Server and Power BI pipeline
+### 5. Start SQL Server with Docker
+
+Requires Docker Desktop. This spins up SQL Server in a container and auto-creates the empty `TIMA_BI` database via an init step.
+
+```bash
+docker compose up -d
+```
+
+### 6. Run the automated SQL Server and Power BI pipeline
 
 Before running the automated pipeline, make sure:
 
-- SQL Server is reachable from your machine.
-- The Microsoft ODBC Driver for SQL Server is installed.
-- `.env` contains `SQLSERVER_CONNECTION_STRING`.
-- The target database/schema exists.
+- The SQL Server container is running (`docker compose up -d`).
+- `.env` contains `MSSQL_SA_PASSWORD` (host/port/user/database have sensible defaults).
+- `pymssql` is installed (listed in requirements).
 
 Run:
 
@@ -307,7 +316,7 @@ python scripts/run_pipeline.py
 
 This command regenerates the Silver cleaned dataset and Gold dimensional outputs, loads the Gold Dim/Fact tables into SQL Server, and optionally triggers Power Automate for Power BI refresh.
 
-### 6. Rebuild outputs manually
+### 7. Rebuild outputs manually
 
 To regenerate the cleaned dataset and dimensional tables:
 
@@ -670,7 +679,7 @@ The project includes `scripts/run_pipeline.py` for a repeatable refresh flow fro
 4. Validates key table quality rules:
    - `Fact_Loans.LoanID` must not contain null values.
    - `Dim_Customer.CardNumber` must be unique.
-5. Loads all final tables into SQL Server through `sqlalchemy` and `pyodbc`.
+5. Loads all final tables into SQL Server through `sqlalchemy` and `pymssql`.
 6. Optionally calls a Power Automate webhook to refresh the Power BI dataset/report after SQL Server has been updated.
 
 ### SQL Server output tables
@@ -693,9 +702,14 @@ During each run, the script first creates `stg_*` tables, then replaces the fina
 Create a local `.env` file in the project root.
 
 ```env
-SQLSERVER_CONNECTION_STRING=DRIVER={ODBC Driver 18 for SQL Server};SERVER=your_server;DATABASE=name_of_database;UID=your_user;PWD=your_password;TrustServerCertificate=yes/no
-SQL_SCHEMA= <Can set default>
-PAPERMILL_KERNEL= <Can be set default>
+# Copy from .env.example. MSSQL_SA_PASSWORD must match the one in docker-compose.yml
+MSSQL_SA_PASSWORD=your_strong_password
+MSSQL_HOST=localhost
+MSSQL_PORT=1433
+MSSQL_USER=sa
+MSSQL_DATABASE=TIMA_BI
+SQL_SCHEMA=dbo
+PAPERMILL_KERNEL=python3
 POWER_AUTOMATE_REFRESH_URL=
 ```
 
@@ -805,7 +819,7 @@ Recommended Power BI refresh flow:
 
 The notebooks use the Python libraries listed in `requirements.txt` and `environment.yml`
 
-The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The automated SQL Server load also requires a local Microsoft ODBC Driver for SQL Server that matches the driver name used in `SQLSERVER_CONNECTION_STRING`.
+The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The automated SQL Server load connects through `pymssql`. SQL Server itself runs in Docker (see `docker-compose.yml`); Docker Desktop is required to start it.
 
 ## Limitations
 

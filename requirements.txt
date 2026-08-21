@@ -10,6 +10,6 @@ ipykernel
 papermill
 python-dotenv
 SQLAlchemy
-pyodbc
+pymssql
 requests
 shap
