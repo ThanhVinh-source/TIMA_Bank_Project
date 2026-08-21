@@ -46,11 +46,16 @@ def run_notebooks():
 
 def load_sqlserver():
     url = URL.create(
-        "mssql+pyodbc",
-        query={"odbc_connect": os.environ["SQLSERVER_CONNECTION_STRING"]},
+        "mssql+pymssql",
+        username=os.getenv("MSSQL_USER", "sa"),
+        password=os.environ["MSSQL_SA_PASSWORD"],
+        host=os.getenv("MSSQL_HOST", "localhost"),
+        port=int(os.getenv("MSSQL_PORT", "1433")),
+        database=os.getenv("MSSQL_DATABASE", "TIMA_BI"),
+        query={"charset": "utf8"},
     )
-    engine = create_engine(url, fast_executemany=True)
-    schema = os.getenv("SQL_SCHEMA", "dbo")
+    engine = create_engine(url)
+    schema = os.getenv("MSSQL_SCHEMA", "dbo")
 
     tables = {}
     for table, path in FILES.items():
