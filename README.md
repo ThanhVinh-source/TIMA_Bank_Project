@@ -78,7 +78,6 @@ The work is designed to answer practical lending questions:
 - [Dimensional Model](#dimensional-model)
 - [Power BI Dashboard](#power-bi-dashboard)
 - [Dependencies](#dependencies)
-- [Troubleshooting](#troubleshooting)
 - [Limitations](#limitations)
 - [Future Improvements](#future-improvements)
 
@@ -821,37 +820,6 @@ Recommended Power BI refresh flow:
 The notebooks use the Python libraries listed in `requirements.txt` and `environment.yml`
 
 The notebook metadata shows a Python 3 kernel. Python 3.10+ is recommended. The automated SQL Server load connects through `pymssql`. SQL Server itself runs in Docker (see `docker-compose.yml`); Docker Desktop is required to start it.
-
-## Troubleshooting
-
-Common issues when running the SQL Server container and the pipeline, with fixes.
-
-### `Error 4060: Cannot open database "TIMA_BI"` / connection refused
-
-The container is up (`docker compose ps`) but the pipeline (or a client) cannot reach it, or reports 4060. This usually means Docker's port forwarding for the container got wedged after a restart or after the Mac went to sleep - SQL Server logs `ready for client connections`, but the host cannot connect on `localhost:1433`.
-
-Fix by recreating the container. The volume (and its data) is preserved:
-
-```bash
-docker compose up -d --force-recreate sqlserver
-```
-
-### Container keeps restarting: `Password validation failed ... too short`
-
-`docker compose ps` shows `sqlserver` in a restart loop. The SA password does not meet SQL Server's policy (minimum 8 characters, and it must mix upper/lower case, digits, and symbols). Set a valid `MSSQL_SA_PASSWORD` in `.env`, then rebuild from scratch:
-
-```bash
-docker compose down -v
-docker compose up -d
-```
-
-### `Login failed for user 'sa'` (error 18456)
-
-The password the pipeline sends does not match the one the container was created with. The SA password is set only on the **first** container init, so changing `MSSQL_SA_PASSWORD` after the volume exists has no effect. Make `.env` match the original password, or wipe and rebuild with `docker compose down -v && docker compose up -d`.
-
-### Apple Silicon (M1/M2/M3) note
-
-`mcr.microsoft.com/mssql/server` is an amd64 image and runs under emulation on Apple Silicon (`docker` prints a `platform ... does not match` warning). It works, but can occasionally hang after `docker compose restart` or after the machine sleeps — the `--force-recreate` fix above resolves it. For a fully arm64-native alternative, consider `mcr.microsoft.com/azure-sql-edge` (note: it is no longer actively developed and lacks some T-SQL features).
 
 ## Limitations
 
