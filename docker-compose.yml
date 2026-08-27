@@ -2,6 +2,7 @@ services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: tima_sqlserver
+    platform: linux/amd64
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
@@ -10,6 +11,7 @@ services:
       - "14330:1433"
     volumes:
       - mssql_data:/var/opt/mssql/data
+    user: "0:0"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"SELECT 1\" || exit 1"]
@@ -18,8 +20,9 @@ services:
       retries: 10
       start_period: 30s
   
-  mssql-init:                                  
+  mssql-init:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
     depends_on:
       sqlserver:
         condition: service_healthy
